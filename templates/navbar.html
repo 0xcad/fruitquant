@@ -1,0 +1,21 @@
+  <h1 class="nav-h1">New York Fruit Exchange</h1>
+  <marquee class="marquee-wrapper">
+  <!--unfortunately position sticky doesn't past its parent element -->
+  <div class="marquee">
+    {% for fruit, entry in fruits.items %}
+    <a href="{% url 'fruit:commodity' fruit|slugify %}">
+      <div class="ticker">
+        {{ fruit }}
+        <div class="triangle triangle_{{ entry.dir }}">{{ entry.dir_symbol }}</div>
+      <div class="price">{{ entry.price|floatformat:2 }}</div>
+    </div>
+    </a>
+    {% endfor %}
+  </div>
+  </marquee>
+<nav>
+  <ul class="nav-links">
+    <a href="{% url 'fruit:index' %}"{%if report_view%} class="active"{% endif %}><li>Daily Report</li></a>
+    <a href="{% url 'fruit:list_commodities' %}"{%if commodity_view%} class="active"{% endif %}><li>Commodities</li></a>
+  </ul>
+</nav>

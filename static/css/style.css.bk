@@ -1,0 +1,102 @@
+:root {
+  --green: #53ca53;
+  --red: red;
+  --color-text: #111;
+  --color-highlight: #ddd;
+  --info: cornflowerblue;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Helvetica, BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+  color: var(--text);
+  background: #fafafa;
+  line-height: 1.25;
+  font-size: 1.1em;
+  height: auto;
+
+  max-width: 55rem;
+  margin: 0 auto;
+}
+
+nav h1 {
+  margin: 1rem 0 0 0;
+  padding: 1rem 0 0.5rem 0;
+  border-bottom: 4px solid;
+  font-variant: small-caps;
+  font-size: 2.2em;
+  transition: 0.2s background;
+  /*font-family: serif;*/
+}
+.marquee {
+  overflow-x: auto;
+  display: flex;
+  flex-flow: row nowrap;
+  border-bottom: 2px solid;
+}
+.marquee a, .marquee a:hover, .marquee a:visited {
+  color: var(--text);
+  text-decoration: none;
+}
+.ticker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0.25rem 0.75rem;
+  text-transform: uppercase;
+  font-family: "Roboto Mono", monospace;
+}
+.ticker:hover {
+  background: var(--color-highlight);
+}
+.ticker .triangle {
+  margin-left: 0.5rem;
+  margin-right: 0.1rem;
+}
+.ticker .triangle.triangle_up {
+  color: var(--green);
+}
+.ticker .triangle.triangle_down {
+  color: var(--red);
+}
+/*.links { display: flex;}*/
+.links {
+  border-bottom: 2px solid;
+  padding: 0;
+  margin: 0;
+}
+.links a {
+  display: block;
+  /*padding: 1.25rem 0.75rem;*/
+  padding: 0.75rem 0.75rem;
+  text-decoration: none;
+  color: var(--text);
+  margin: 0;
+  list-style: none;
+}
+.links a li {
+  padding-left: 1rem;
+  position: relative;
+}
+.links a.active {
+  font-weight: bold;
+}
+.links a:hover {
+  background: var(--color-highlight);
+}
+.links a.active li::before, .links a:hover li::before {
+  content: '▶';
+  font-size: 0.8em;
+  display: inline;
+  position: absolute;
+  top: 50%;
+  left: -0.5em;
+  transform: translateY(-50%);
+}

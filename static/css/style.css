@@ -1,0 +1,295 @@
+:root {
+  --color-up: red;
+  --color-down: #53ca53;
+  --color-text: #111;
+  --color-text-light: #555;
+  --color-highlight: #ddd;
+  --color-primary: #22e;
+  --color-primary-light: #4b4bff;
+  --color-body-bg: #fafafa;
+  --nav-height: 32px;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Helvetica, BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+  color: var(--text);
+  background: var(--color-body-bg);
+  line-height: 1.25;
+  font-size: 1.1em;
+  height: auto;
+
+  max-width: 58rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+}
+
+.main-wrapper {
+  position: relative;
+}
+aside {
+  margin-left: 2rem;
+  position: absolute;
+  left: 58rem;
+  top: 0;
+  width: 22rem;
+  height: 100%;
+}
+.fruit-list-wrapper {
+  position: sticky;
+  top: var(--nav-height);
+  overflow: hidden auto;
+  contain: paint;
+  max-height: calc(100vh - 2 * var(--nav-height));
+  border-left: 2px dashed;
+  /*border-top: 2px dashed;*/
+  box-sizing: border-box;
+}
+.fruit-list {
+  margin: 0;
+  line-height: 1.4;
+  list-style: none;
+  padding: 1rem 1.25rem;
+  font-family: mono, monospace;
+  border-bottom: 2px dashed;
+  border-top: 2px dashed;
+}
+.fruit-list li {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.fruit-list .market-offerings {
+  margin: 0.25rem 0;
+}
+.fruit-list .market-offerings a {
+  background: var(--color-down);
+  color: white;
+  padding: 0.25rem;
+}
+
+nav {
+  margin-bottom: 2rem;
+}
+nav h1, .nav-h1 {
+  margin: 1rem 0 0 0;
+  padding: 1rem 0 0.5rem 0;
+  border-bottom: 4px solid;
+  font-variant: small-caps;
+  font-size: 2.5em;
+  /*font-family: serif;*/
+}
+.marquee-wrapper {
+  border-bottom: 2px solid;
+  position: sticky;
+  top: 0;
+  background: var(--color-body-bg);
+  z-index: 1;
+}
+.marquee {
+  display: flex;
+  flex-flow: row nowrap;
+  white-space: nowrap;
+}
+.marquee a, .marquee a:hover, .marquee a:visited {
+  color: var(--text);
+  text-decoration: none;
+}
+.ticker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0.25rem 1rem;
+  text-transform: uppercase;
+  font-family: "Roboto Mono", monospace;
+}
+.ticker:hover {
+  background: var(--color-highlight);
+}
+.ticker .triangle {
+  margin-left: 0.5rem;
+  margin-right: 0.1rem;
+}
+.ticker .triangle.triangle_up {
+  color: var(--color-up);
+}
+.ticker .triangle.triangle_down {
+  color: var(--color-down);
+}
+.nav-links {
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+.nav-links a {
+  display: block;
+  /*padding: 1.25rem 0.75rem;*/
+  padding: 0.75rem 0.75rem;
+  text-decoration: none;
+  color: var(--text);
+  margin: 0;
+  list-style: none;
+  border-left: 2px dashed;
+}
+.nav-links a:last-of-type {
+  border-right: 2px dashed var(--color-text);
+}
+.nav-links a li {
+  position: relative;
+}
+.nav-links a.active {
+  /*border-color: var(--color-primary);*/
+  font-weight: bold;
+}
+.nav-links a:hover {
+  background: var(--color-highlight);
+  text-decoration: none;
+}
+/*.nav-links a li { padding-left: 1rem; }
+.nav-links a.active li::before, .nav-links a:hover li::before {
+  content: '▶';
+  font-size: 0.8em;
+  display: inline;
+  position: absolute;
+  top: 50%;
+  left: -0.5em;
+  transform: translateY(-50%);
+}*/
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--color-primary-light);
+  text-decoration: underline;
+}
+.block-link {
+  padding: 1rem;
+}
+.block-link:hover {
+  background: var(--color-highlight);
+  text-decoration: none;
+}
+h1 { font-size: 2.2em; }
+h2 { font-size: 2em; }
+.report-subheader { margin-top: 1.5em; margin-bottom: 0.5em; }
+h3 { font-size: 1.5em; }
+p { margin-top: 0; }
+.pre { white-space: pre-wrap; }
+.d-none { display: none; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+
+.footer {
+  background: var(--color-text);
+  color: var(--color-body-bg);
+  text-align: center;
+  padding: 0.75rem 0.75rem;
+  font-size: 0.9em;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.5px;
+  margin-top: 1rem;
+}
+.footer a {
+  color: var(--color-highlight);
+}
+
+.date-wrapper {
+  position: relative;
+}
+.date-wrapper h1 {
+  text-align: center;
+  margin: 1rem 0 0 0;
+}
+.date-wrapper a {
+  position: absolute;
+  bottom: -1rem;
+}
+.date-wrapper a:nth-of-type(2) {right: 0;}
+
+.fruit-header-wrapper {
+  display: block;
+}
+.fruit {
+  color: var(--color-text);
+  margin: 0;
+  transition: 0.2s;
+}
+a:hover .fruit {
+  color: var(--color-text-light);
+}
+a:hover .fruit .arrow {
+  transform: translateX(0.25rem);
+}
+
+.fruit .arrow {
+  float: right;
+  transition: 0.2s;
+  margin-right: 0.25rem;
+}
+.fruit_up::before, .fruit_down::before, .fruit_neutral::before {
+  margin-right: 0.25rem;
+  font-family: mono, monospace;
+}
+.fruit_up::before{ content: '▲'; color: var(--color-up); }
+.fruit_down::before{ content: '▼'; color: var(--color-down); }
+.fruit_neutral::before{ content: '—'; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  border-bottom: 1px solid var(--color-highlight);
+}
+td, th {
+  padding: 0.5rem;
+  text-align: left;
+}
+table tr:nth-child(even) {
+  background-color: var(--color-highlight);
+}
+table td, table th, { border: 1px solid var(--color-highlight); }
+table td { font-family: monospace; font-size: 1rem;}
+table tr:first-of-type { position: sticky; top: var(--nav-height);}
+table tr:first-of-type th {
+  background: var(--color-body-bg);
+  outline: 1px solid var(--color-highlight);
+}
+
+.fruit-wrapper { margin-bottom: 1rem; }
+.fruit-wrapper:not(:last-of-type) { border-bottom: 1px solid #ccc; }
+.fruit-container {
+  margin-top: 1rem;
+}
+
+.market-offerings-header {
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  background: var(--color-highlight);
+}
+.market-offerings-header.is-down {
+  background: var(--color-down);
+  color: white;
+}
+
+.chart {
+  border: 1px solid red;
+  width: 100%;
+  height: auto;
+  max-height: 32rem;
+  padding-top: 56.25%;
+  aspect-ratio: 9 / 16;
+  box-sizing: border-box;
+  resize: both;
+}
+.varieties-list {
+  margin: -1rem 0 1.5rem 0;
+}

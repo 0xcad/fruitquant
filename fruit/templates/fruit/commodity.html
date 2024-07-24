@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load fruit_filters %}
+
+{% block content %}
+<!--<div class='main-wrapper'>
+<main>-->
+{% if fruit %}
+<h1 class="fruit_{{ entry.dir }}">{{ fruit }}</h1>
+<h3 class='market-offerings-header{% if entry.has_offerings %} is-down{% endif %}'>{{ entry.market_tone }}</h3>
+<div class="chart"></div>
+
+<h2>{{ date|date:"D. F j, Y"}}</h2>
+<table>
+  <tr>
+    <th>variety</th>
+    <th>package</th>
+    <th>grade</th>
+    <th>item size</th>
+    <th>low price</th>
+    <th>high price</th>
+  </tr>
+  {% for row in entry.table %}
+  <tr>
+    <td>{{ row.variety }}</td>
+    <td>{{ row.package }}</td>
+    <td>{{ row.grade }}</td>
+    <td>{{ row.item_size }}</td>
+    <td>{{ row.low_price }}</td>
+    <td>{{ row.high_price }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2 id="historical-prices">Historical Prices</h2>
+<table>
+  <tr>
+    <th>date</th>
+    <th>varieties</th>
+    <th>packages</th>
+    <th>grades</th>
+    <th>item sizes</th>
+    <th>low price</th>
+    <th>high price</th>
+  </tr>
+  {% for row in entry.table_grouped_paged %}
+    <tr>
+      <td><a href="{% url 'fruit:report' row.report_begin_date|get_date %}#{{ fruit|slugify }}">{{ row.report_begin_date|get_date }}</a></td>
+      <td>{{ row.variety|comma_separated }}</td>
+      <td>{{ row.package|comma_separated }}</td>
+      <td>{{ row.grade|comma_separated }}</td>
+      <td>{{ row.item_size|comma_separated }}</td>
+      <td>{{ row.low_price|min_filter }}</td>
+      <td>{{ row.high_price|max_filter }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if entry.table_grouped_paged.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ entry.table_grouped_paged.previous_page_number }}#historical-prices">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ entry.table_grouped_paged.number }} of {{ entry.table_grouped_paged.paginator.num_pages }}.
+        </span>
+
+        {% if entry.table_grouped_paged.has_next %}
+            <a href="?page={{ entry.table_grouped_paged.next_page_number }}#historical-prices">next</a>
+            <a href="?page={{ entry.table_grouped_paged.paginator.num_pages }}#historical-prices">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% else %}
+<h1>Commodities</h1>
+<p><i>Select a fruit from the list to get a more detailed view.</i></p>
+{% endif %}
+<!--</main>
+
+{% if fruits %}
+<aside>
+  {% if entry.varieties|remove_na %}
+  <h2>Varieties</h2>
+  <ul class="varieties-list">
+    {% for variety in entry.vendors|remove_na %}
+      <li>{{ variety }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <h2 class="mb-2">Other Fruits</h2>
+  <div class='fruit-list-wrapper'>
+  <ul class='fruit-list'>
+    {% for fruit, entry in fruits.items %}
+    <li class="fruit-item fruit_{{ entry.dir }}{% if entry.has_offerings %} market-offerings{% endif %}">
+      <a href="{% url 'fruit:commodity' fruit|slugify %}">{{ fruit }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  </div>
+</aside>
+{% endif %}
+</div>-->
+{% endblock %}

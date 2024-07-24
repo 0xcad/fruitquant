@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="New York Fruit Exchange">
+  <meta name="author" content="cassidy">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{% block title %}NYFE{% endblock %}</title>
+  <link type="text/css" href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="is-{{ message.tags }}"{% endif %}>
+	  {{ message }}<span class='close' onclick="close_message(this)" aria-label="close message">✖</span>
+      </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% include "navbar.html" %}
+  {% block content %}
+  {% endblock %}
+
+  <footer class="footer">
+    Data is retrieved on demand from the <a href="https://mymarketnews.ams.usda.gov/">USDA Agricultural Marketing Service</a>
+  </footer>
+
+<script>
+  function close_message(el){
+    el.parentElement.remove();
+  }
+</script>
+<script src="{% static 'js/script.js'%}"></script>
+</body>
+</html>
