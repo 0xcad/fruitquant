@@ -8,6 +8,7 @@
   --color-primary-light: #4b4bff;
   --color-body-bg: #fafafa;
   --nav-height: 32px;
+  --full-nav-height: 11.5rem;
 }
 
 body, html {
@@ -25,23 +26,44 @@ body {
   font-size: 1.1em;
   height: auto;
 
-  max-width: 58rem;
+  /*max-width: 58rem;
   margin: 0 auto;
   padding: 0 1.5rem;
-  box-sizing: border-box;
+  box-sizing: border-box;*/
 }
 
 .main-wrapper {
   position: relative;
+  display: flex;
+  flex-flow: row wrap;
+}
+main {
+  max-width: 58rem;
+  /*margin: 0 auto;*/
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+  flex: 2;
 }
 aside {
+  min-width: 22rem;
+  flex: 1;
+  box-sizing: border-box;
+}
+aside:not(.dummy) { padding-top: var(--full-nav-height); }
+.sidepanel {
+  max-width: 22rem;
+  margin-left: 2rem;
+  box-sizing: border-box;
+  height: 100%;
+}
+/*aside {
   margin-left: 2rem;
   position: absolute;
   left: 58rem;
   top: 0;
   width: 22rem;
   height: 100%;
-}
+}*/
 .fruit-list-wrapper {
   position: sticky;
   top: var(--nav-height);

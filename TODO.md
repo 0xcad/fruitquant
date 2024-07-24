@@ -27,10 +27,18 @@ main thing that's left:
 * stock chart
 * css grid on pagination
 * combine json files
-* footer at bottom of page?
+* footer to be always on bottom of page (need some flex grow column stuff in main content)
 * fix `aside` with css grid, likely, or some flexbox
 * some basic media queries
-* links to reports with commidty href on historical prices
 * automatically skip weekends, since there's no fruit reports those days. in reports the previous day should also be the previous *weekday*
 
 * should "low price" and "high price" on commodity be median low and median high?
+
+re media queries:
+* ideally, the page layout is the main column with all the content, and then the aside
+* when the page gets too small, the aside should fold in to be *below* the navbar, but above the rest of the page content
+* *if* i didn't have to worry about the navbar this would be easy. i would just have the nav, the wrapper for the main col + aside, and then use `flex flow: row wrap` and `flex-direction: reverse` when the time called for it
+* however, for position sticky to work on the nav i think it needs to be in the main column div
+
+idea:
+* could i place the aside panel in the main column, then use position absolute to drag it out to the side. i just use media queries to set it to be non-position absolute to "fold it" back in. this is it, yeah, that's the plan
