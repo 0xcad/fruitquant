@@ -77,28 +77,28 @@
 <p><i>Select a fruit from the list to get a more detailed view.</i></p>
 {% endif %}
 <!--</main>
-
-{% if fruits %}
-<aside>
-  {% if entry.varieties|remove_na %}
-  <h2>Varieties</h2>
-  <ul class="varieties-list">
-    {% for variety in entry.vendors|remove_na %}
-      <li>{{ variety }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-  <h2 class="mb-2">Other Fruits</h2>
-  <div class='fruit-list-wrapper'>
-  <ul class='fruit-list'>
-    {% for fruit, entry in fruits.items %}
-    <li class="fruit-item fruit_{{ entry.dir }}{% if entry.has_offerings %} market-offerings{% endif %}">
-      <a href="{% url 'fruit:commodity' fruit|slugify %}">{{ fruit }}</a>
-    </li>
-    {% endfor %}
-  </ul>
-  </div>
-</aside>
-{% endif %}
 </div>-->
+{% endblock %}
+
+{% block aside %}
+{% if fruits %}
+{% if entry.varieties|remove_na %}
+<h2>Varieties</h2>
+<ul class="varieties-list">
+  {% for variety in entry.varieties|remove_na %}
+    <li>{{ variety }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<h2 class="mb-2">Other Fruits</h2>
+<div class='fruit-list-wrapper'>
+<ul class='fruit-list'>
+  {% for fruit, entry in fruits.items %}
+  <li class="fruit-item fruit_{{ entry.dir }}{% if entry.has_offerings %} market-offerings{% endif %}">
+    <a href="{% url 'fruit:commodity' fruit|slugify %}">{{ fruit }}</a>
+  </li>
+  {% endfor %}
+</ul>
+</div>
+{% endif %}
 {% endblock %}

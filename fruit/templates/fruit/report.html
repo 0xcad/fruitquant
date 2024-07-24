@@ -1,75 +1,58 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class='main-wrapper'>
-  <main>
-  <div class="date-wrapper">
-    <a href="{% url 'fruit:report' prev_date|date:'Y-m-d' %}" class="block-link">❮ {{ prev_date|date:"F j" }}</a>
-    <h1>{{ date|date:"D. F j, Y" }}</h1>
-    {% if next_date %}
-    <a href="{% url 'fruit:report' next_date|date:'Y-m-d' %}" class="block-link">{{ next_date|date:"F j" }} ❯</a>
-    {% endif %}
-  </div>
+<div class="date-wrapper">
+  <a href="{% url 'fruit:report' prev_date|date:'Y-m-d' %}" class="block-link">❮ {{ prev_date|date:"F j" }}</a>
+  <h1>{{ date|date:"D. F j, Y" }}</h1>
+  {% if next_date %}
+  <a href="{% url 'fruit:report' next_date|date:'Y-m-d' %}" class="block-link">{{ next_date|date:"F j" }} ❯</a>
+  {% endif %}
+</div>
 
-  <h2 class='report-subheader'>Weather</h2>
-  <p class='pre'>{{ weather }}</p>
+<h2 class='report-subheader'>Weather</h2>
+<p class='pre'>{{ weather }}</p>
 
-  <h2 class='report-subheader'>Market</h2>
-  <input type="checkbox" id="marketFilter" name="marketFilter" />
-  <label for="marketFilter">show only market offerings</label>
+<h2 class='report-subheader'>Market</h2>
+<input type="checkbox" id="marketFilter" name="marketFilter" />
+<label for="marketFilter">show only market offerings</label>
 
-  <div class='fruit-container'>
-    {% if fruits %}
-    {% for fruit, entry in fruits.items %}
-    <article class='fruit-item fruit-wrapper {% if entry.has_offerings %}market-offerings{% endif %}' id="{{ fruit|slugify }}">
-      <a href="{% url 'fruit:commodity' fruit|slugify %}" class="block-link fruit-header-wrapper">
-        <h3 class="fruit fruit_{{ entry.dir }}">
-          {{ fruit }}
-          <span class="arrow"> ❯</span>
-        </h3>
-      </a>
-      {% if entry.has_offerings %}
-      <h4 class='market-offerings-header is-down'>{{ entry.market_tone }}</h4>
-      {% endif %}
-      <table>
-        <tr>
-          <th>variety</th>
-          <th>package</th>
-          <th>grade</th>
-          <th>item size</th>
-          <th>low price</th>
-          <th>high price</th>
-        </tr>
-        {% for row in entry.table %}
-        <tr>
-          <td>{{ row.variety }}</td>
-          <td>{{ row.package }}</td>
-          <td>{{ row.grade }}</td>
-          <td>{{ row.item_size }}</td>
-          <td>{{ row.low_price }}</td>
-          <td>{{ row.high_price }}</td>
-        </tr>
-        {% endfor %}
-      </table>
-    </article>
-    {% endfor %}
-    {% else %}
-    <p><i>couldn't find fruits :(</i></p>
-    {% endif %}
-  </div>
-  </main>
+<div class='fruit-container'>
   {% if fruits %}
-  <aside>
-    <div class='fruit-list-wrapper'>
-    <ul class='fruit-list'>
-      {% for fruit, entry in fruits.items %}
-      <li class="fruit-item fruit_{{ entry.dir }}{% if entry.has_offerings %} market-offerings{% endif %}">
-        <a href="#{{ fruit|slugify }}">{{ fruit }}</a>
-      </li>
+  {% for fruit, entry in fruits.items %}
+  <article class='fruit-item fruit-wrapper {% if entry.has_offerings %}market-offerings{% endif %}' id="{{ fruit|slugify }}">
+    <a href="{% url 'fruit:commodity' fruit|slugify %}" class="block-link fruit-header-wrapper">
+      <h3 class="fruit fruit_{{ entry.dir }}">
+        {{ fruit }}
+        <span class="arrow"> ❯</span>
+      </h3>
+    </a>
+    {% if entry.has_offerings %}
+    <h4 class='market-offerings-header is-down'>{{ entry.market_tone }}</h4>
+    {% endif %}
+    <table>
+      <tr>
+        <th>variety</th>
+        <th>package</th>
+        <th>grade</th>
+        <th>item size</th>
+        <th>low price</th>
+        <th>high price</th>
+      </tr>
+      {% for row in entry.table %}
+      <tr>
+        <td>{{ row.variety }}</td>
+        <td>{{ row.package }}</td>
+        <td>{{ row.grade }}</td>
+        <td>{{ row.item_size }}</td>
+        <td>{{ row.low_price }}</td>
+        <td>{{ row.high_price }}</td>
+      </tr>
       {% endfor %}
-    </ul>
-    </div>
-  </aside>
+    </table>
+  </article>
+  {% endfor %}
+  {% else %}
+  <p><i>couldn't find fruits :(</i></p>
   {% endif %}
 </div>
 
@@ -90,4 +73,18 @@
   marketFilterEl.addEventListener('change', filterMarket);
   filterMarket();
 </script>
+{% endblock %}
+
+{% block aside %}
+{% if fruits %}
+<div class='fruit-list-wrapper'>
+<ul class='fruit-list'>
+  {% for fruit, entry in fruits.items %}
+  <li class="fruit-item fruit_{{ entry.dir }}{% if entry.has_offerings %} market-offerings{% endif %}">
+    <a href="{% url 'fruit:commodity' fruit|slugify %}">{{ fruit }}</a>
+  </li>
+  {% endfor %}
+</ul>
+</div>
+{% endif %}
 {% endblock %}
