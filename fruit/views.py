@@ -16,10 +16,27 @@ from operator import itemgetter
 
 API_KEY = "0vgoHqEhtTZk/b0cE+I1JV+Xrw6x7lXm"
 API_ROOT = "https://marsapi.ams.usda.gov/services/v1.2/reports/2314"
+MAX_RANGE = 365 # one year of days
+
+def prev_date(date = None, reverse=False):
+    """
+    Return the previous weekday to an inputted date
+    """
+    if date is None:
+        date = datetime.now()
+    sign = -1 if reverse else 1
+    date -= timedelta(days=sign * 1)
+    if ((not reverse and date.weekday() == 5) or
+        (reverse and date.weekday() == 6)):
+        return date - timedelta(days=sign * 1)
+    elif ((not reverse and date.weekday() == 6) or
+          (reverse and date.weekday() == 5)):
+        return date - timedelta(days=sign * 2)
+    return date
 
 def get_report(end_date=None, commodity=None, duration=None):
     if end_date is None:
-        end_date = timezone.now() - timedelta(days=1)
+        end_date = prev_date()
     date_str = end_date.strftime('%m/%d/%Y')
     if duration is not None:
         start_date = end_date - duration
@@ -31,7 +48,10 @@ def get_report(end_date=None, commodity=None, duration=None):
     url = f'{API_ROOT}?q=report_begin_date={filter_str}&allSections=true'
 
     # check cache
-    path = f'cache/{filter_str.replace("/", "_")}.json'
+    #commodity_path = f'{slugify(commodity)}/' if commodity else ''
+    # TODO
+    commodity_path = ''
+    path = f'cache/{commodity_path}{filter_str.replace("/", "_")}.json'
     if os.path.exists(path):
         with open(path) as f:
             return json.load(f)
@@ -49,6 +69,7 @@ def get_report(end_date=None, commodity=None, duration=None):
 
     return data
 
+# given a report, return the weather
 def get_weather(report):
     if not report:
         report = [{}]
@@ -57,9 +78,10 @@ def get_weather(report):
         results = [{}]
     return results[0].get("report_narrative", "couldn't find weather :(")
 
+# given a report, return the fruits in that report
 def get_fruits(report):
     if not report:
-        report = [{}]
+        report = [{}, {}]
     entries = report[1].get('results', [])
     fruits = {}
     for entry in entries:
@@ -71,12 +93,23 @@ def get_fruits(report):
         fruits[fruit] = fruit_arr
     return dict(sorted(fruits.items()))
 
-def get_fruit_price(fruit_arr):
+
+def isfloat(value):
     """
-    Gets the average price for a fruit
+    Returns true if a value is a float or can be casted into one
+    """
+    if type(value) is float or type(value) is int:
+        return True
+    elif type(value) is str:
+        return value.replace('.', '', 1).isdigit()
+    return False
+
+def get_fruit_price(fruit_arr, dir="low"):
+    """
+    Gets the mean price for a fruit
     TODO: make this unit price?
     """
-    prices = [float(fruit['low_price']) for fruit in fruit_arr if fruit.get('low_price')]
+    prices = [float(fruit[f'{dir}_price']) for fruit in fruit_arr if isfloat(fruit.get(f'{dir}_price'))]
     return sum(prices) / len(prices) if len(prices) else 0
 
 def get_market_tone(fruit_arr):
@@ -96,7 +129,7 @@ def get_market_tone(fruit_arr):
 
 def get_marquee(date):
     fruits = get_fruits(get_report(end_date=date))
-    prev_fruits = get_fruits(get_report(end_date=date-timedelta(days=1)))
+    prev_fruits = get_fruits(get_report(end_date=prev_date(date)))
 
     marquee = {}
     for fruit, entries in fruits.items():
@@ -121,14 +154,14 @@ def daily_report(request, date=None):
     if date is not None:
         date = datetime.strptime(date, '%Y-%m-%d')
     else:
-        date = datetime.now() - timedelta(days=1)
+        date = prev_date()
     if date + timedelta(days=1) < today:
-        next_date = date + timedelta(days=1)
+        next_date = prev_date(date, reverse=True)
     report = get_report(end_date=date)
 
     context = {
         "date": date,
-        "prev_date": date - timedelta(days=1),
+        "prev_date": prev_date(date),
         "next_date": next_date,
         "weather": get_weather(report),
         "fruits": get_marquee(date),
@@ -137,12 +170,21 @@ def daily_report(request, date=None):
     return render(request, 'fruit/report.html', context)
 
 
-def consolidate_fruits(fruit_arr):
+def consolidate_fruits(fruit_arr, date):
     """
     Take in a list of fruits and then return a single
     dictionary where the values are comma separated values of
     all values present
     """
+
+    def minmax(value, fn):
+        arr = [float(x) for x in value if x and isfloat(x)]
+        #if not arr:
+        #    return "N/A"
+        if not arr:
+            return None
+        return fn(arr)
+
     combined_dict = {}
     for d in fruit_arr:
         for key, value in d.items():
@@ -153,10 +195,61 @@ def consolidate_fruits(fruit_arr):
     #for key in combined_dict.keys():
     #    str_list = sorted([str(i) for i in list(combined_dict[key])])
     #    combined_dict[key] = ', '.join(str_list)
+    combined_dict["low_price"] = minmax(combined_dict.get('low_price', None), min)
+    combined_dict["high_price"] = minmax(combined_dict.get('high_price', None), max)
+    lo = combined_dict.get("low_price")
+    hi = combined_dict.get("high_price")
+    combined_dict['mean_price'] = (float(hi) + float(lo)) / 2.0 if isfloat(hi) and isfloat(lo) else 0
+
+    date_obj = datetime.strptime(date, '%m/%d/%Y')
+    combined_dict['date'] = date_obj
+    combined_dict['date_str'] = datetime.strftime(date_obj, '%Y-%m-%d')
     return combined_dict
 
+def get_chart_data(table_grouped):
+    data = []
+    """table = list(reversed(table_grouped))
+    for i in range(len(table)):
+        prev_entry = table[i - 1] if i >= 1 else {}
+        entry = table[i]
+        if entry.get("low_price") and entry.get("high_price"):
+            open_price = prev_entry.get("mean_price", entry['mean_price'])
+            data.append({
+                "time": entry['date_str'],
+                "open": open_price,
+                "high": entry['high_price'],
+                "low": entry['low_price'],
+                "close": entry['mean_price'],
+            })"""
+    table = {entry['date_str']: entry for entry in table_grouped}
+    date = table_grouped[-1]['date']
+    end_date = table_grouped[0]['date']
+    i = 0
+    loop_count = 0
+    prev_entry = {}
+    while not (i >= len(table) or date == end_date or loop_count >= MAX_RANGE):
+        date_str = datetime.strftime(date, '%Y-%m-%d')
+        entry = table.get(date_str)
+        if not (entry and entry.get("low_price") and entry.get("high_price")):
+            data.append({"time": date_str})
+        else:
+            open_price = prev_entry.get("mean_price", entry['mean_price'])
+            data.append({
+                "time": entry['date_str'],
+                "open": open_price,
+                "high": entry['high_price'],
+                "low": entry['low_price'],
+                "close": entry['mean_price'],
+            })
+            i += 1
+            prev_entry = entry
+        date = date + timedelta(days=1)
+        print(i, date, table.get(date_str), len(table))
+        loop_count += 1
+    return json.dumps(data)
+
 def commodity(request, fruit_slug=None):
-    date = datetime.now() - timedelta(days=1)
+    date = prev_date()
     fruits = get_marquee(date)
     fruit = None
     if fruit_slug:
@@ -166,17 +259,17 @@ def commodity(request, fruit_slug=None):
                 break
     if fruit_slug is not None and fruit is None:
         messages.error(request, 'not a valid fruit :(')
-        return HttpResponseRedirect(reverse('fruit:index'))
+        return HttpResponseRedirect(reverse('fruit:list_commodities'))
 
     entry = None
     if fruit:
-        report = get_report(commodity=fruit, duration=timedelta(days=365), end_date=date)
+        report = get_report(commodity=fruit, duration=timedelta(days=MAX_RANGE), end_date=date)
         table = get_fruits(report).get(fruit, [])
 
         #table_paged = Paginator(table, 20)
         #page = request.GET.get('page')
         table_grouped = groupby(table, key = itemgetter('report_begin_date'))
-        table_grouped = [consolidate_fruits(entry) for date, entry in table_grouped]
+        table_grouped = [consolidate_fruits(entry, date) for date, entry in table_grouped]
         table_grouped_paged = Paginator(table_grouped, 20)
         page = request.GET.get('page')
         entry = {
@@ -184,6 +277,7 @@ def commodity(request, fruit_slug=None):
             "table_grouped": table_grouped,
             "table_grouped_paged": table_grouped_paged.get_page(page),
             "varieties": sorted(list(set([e.get('variety') for e in table]))),
+            "chart": get_chart_data(table_grouped),
         }
         entry.update(fruits[fruit]) # add other info from marquee
 

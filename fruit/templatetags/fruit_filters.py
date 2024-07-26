@@ -7,6 +7,8 @@ register = template.Library()
 
 @register.filter
 def remove_na(value):
+    if not value:
+        return False
     return [x for x in value if x != "N/A"]
 
 @register.filter
@@ -21,7 +23,7 @@ def get_date(value):
     date = datetime.strptime(date_str, '%m/%d/%Y')
     return datetime.strftime(date, '%Y-%m-%d')
 
-def minmax(value, fn):
+"""def minmax(value, fn):
     arr = [float(x) for x in value if x and x.replace('.', '', 1).isdigit()]
     if not arr:
         return "N/A"
@@ -34,4 +36,4 @@ def max_filter(value):
 
 @register.filter
 def min_filter(value):
-    return minmax(value, min)
+    return minmax(value, min)"""

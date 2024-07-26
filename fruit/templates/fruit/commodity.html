@@ -2,15 +2,14 @@
 {% load fruit_filters %}
 
 {% block content %}
-<!--<div class='main-wrapper'>
-<main>-->
 {% if fruit %}
 <h1 class="fruit_{{ entry.dir }}">{{ fruit }}</h1>
 <h3 class='market-offerings-header{% if entry.has_offerings %} is-down{% endif %}'>{{ entry.market_tone }}</h3>
-<div class="chart"></div>
+<div class="chart-wrapper"><div class="chart"></div></div>
 
 <h2>{{ date|date:"D. F j, Y"}}</h2>
-<table>
+<div class="overflow-x-auto">
+<table class="table">
   <tr>
     <th>variety</th>
     <th>package</th>
@@ -30,9 +29,11 @@
   </tr>
   {% endfor %}
 </table>
+</div>
 
 <h2 id="historical-prices">Historical Prices</h2>
-<table>
+<div class="overflow-x-auto">
+<table class="table">
   <tr>
     <th>date</th>
     <th>varieties</th>
@@ -44,40 +45,57 @@
   </tr>
   {% for row in entry.table_grouped_paged %}
     <tr>
-      <td><a href="{% url 'fruit:report' row.report_begin_date|get_date %}#{{ fruit|slugify }}">{{ row.report_begin_date|get_date }}</a></td>
+      <td><a href="{% url 'fruit:report' row.date_str %}#{{ fruit|slugify }}">{{ row.date|date:"Y-m-d" }}</a></td>
       <td>{{ row.variety|comma_separated }}</td>
       <td>{{ row.package|comma_separated }}</td>
       <td>{{ row.grade|comma_separated }}</td>
       <td>{{ row.item_size|comma_separated }}</td>
-      <td>{{ row.low_price|min_filter }}</td>
-      <td>{{ row.high_price|max_filter }}</td>
+      <td>{{ row.low_price }}</td>
+      <td>{{ row.high_price }}</td>
     </tr>
   {% endfor %}
 </table>
+</div>
 
 <div class="pagination">
-    <span class="step-links">
-        {% if entry.table_grouped_paged.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ entry.table_grouped_paged.previous_page_number }}#historical-prices">previous</a>
-        {% endif %}
+  <span class="step-links">
+    <span>
+    {% if entry.table_grouped_paged.has_previous %}
+      <a href="?page=1">&laquo; first</a>
+      <a href="?page={{ entry.table_grouped_paged.previous_page_number }}#historical-prices">previous</a>
+    {% endif %}
+    </span>
 
-        <span class="current">
-            Page {{ entry.table_grouped_paged.number }} of {{ entry.table_grouped_paged.paginator.num_pages }}.
-        </span>
+    <span class="current">
+      Page {{ entry.table_grouped_paged.number }} of {{ entry.table_grouped_paged.paginator.num_pages }}.
+    </span>
 
-        {% if entry.table_grouped_paged.has_next %}
-            <a href="?page={{ entry.table_grouped_paged.next_page_number }}#historical-prices">next</a>
-            <a href="?page={{ entry.table_grouped_paged.paginator.num_pages }}#historical-prices">last &raquo;</a>
-        {% endif %}
+    <span>
+    {% if entry.table_grouped_paged.has_next %}
+      <a href="?page={{ entry.table_grouped_paged.next_page_number }}#historical-prices">next</a>
+      <a href="?page={{ entry.table_grouped_paged.paginator.num_pages }}#historical-prices">last &raquo;</a>
+    {% endif %}
+    </span>
     </span>
 </div>
 {% else %}
 <h1>Commodities</h1>
 <p><i>Select a fruit from the list to get a more detailed view.</i></p>
 {% endif %}
-<!--</main>
-</div>-->
+
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<script>
+  const chartOptions = {
+    layout: { textColor: '#111', background: { type: 'solid', color: '#fafafa' } },
+  };
+  const chart = LightweightCharts.createChart(document.querySelector('.chart'), chartOptions);
+  const candlestickSeries = chart.addCandlestickSeries({
+    upColor: 'red', downColor: '#53ca53', borderVisible: false,
+    wickUpColor: 'red', wickDownColor: '#53ca53',
+  });
+  candlestickSeries.setData({{ entry.chart|safe }});
+  chart.timeScale().fitContent();
+</script>
 {% endblock %}
 
 {% block aside %}

@@ -12,28 +12,20 @@
 </head>
 
 <body>
-
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="is-{{ message.tags }}"{% endif %}>
+    {{ message }}<span class='close' onclick="close_message(this)" aria-label="close message">✖</span>
+      </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% include "navbar.html" %}
   <div class="main-wrapper">
-    <aside class="aside dummy">
-    </aside>
     <main>
-      {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-          <li{% if message.tags %} class="is-{{ message.tags }}"{% endif %}>
-        {{ message }}<span class='close' onclick="close_message(this)" aria-label="close message">✖</span>
-          </li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-
-      {% include "navbar.html" %}
       {% block content %}
       {% endblock %}
-
-      <footer class="footer">
-        Data is retrieved on demand from the <a href="https://mymarketnews.ams.usda.gov/">USDA Agricultural Marketing Service</a>
-      </footer>
     </main>
     <aside class="aside">
       <div class="sidepanel">
@@ -41,6 +33,9 @@
         {% endblock %}
       </div>
     </aside>
+    <footer class="footer">
+      Data is retrieved on demand from the <a href="https://mymarketnews.ams.usda.gov/">USDA Agricultural Marketing Service</a>
+    </footer>
   </div>
 
 <script>
