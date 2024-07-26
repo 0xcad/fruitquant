@@ -13,6 +13,7 @@
 
 ## commodities
 * can i make a way to combine json files for ytd into one? that would be huge, modify `get_report`...
+* click on a date in the chart and get sent to that position in the table...
 
 
 main thing that's left:

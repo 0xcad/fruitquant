@@ -17,13 +17,13 @@ def comma_separated(value):
         value = remove_na(value)
     return ", ".join(value)
 
-@register.filter
+"""@register.filter
 def get_date(value):
     date_str = list(value)[0]
     date = datetime.strptime(date_str, '%m/%d/%Y')
     return datetime.strftime(date, '%Y-%m-%d')
 
-"""def minmax(value, fn):
+def minmax(value, fn):
     arr = [float(x) for x in value if x and x.replace('.', '', 1).isdigit()]
     if not arr:
         return "N/A"

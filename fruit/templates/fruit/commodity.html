@@ -24,8 +24,8 @@
     <td>{{ row.package }}</td>
     <td>{{ row.grade }}</td>
     <td>{{ row.item_size }}</td>
-    <td>{{ row.low_price }}</td>
-    <td>{{ row.high_price }}</td>
+    <td>{% if row.low_price%}{{ row.low_price }}{% else %}N/A{% endif %}</td>
+    <td>{% if row.high_price%}{{ row.high_price }}{% else %}N/A{% endif %}</td>
   </tr>
   {% endfor %}
 </table>
@@ -50,8 +50,8 @@
       <td>{{ row.package|comma_separated }}</td>
       <td>{{ row.grade|comma_separated }}</td>
       <td>{{ row.item_size|comma_separated }}</td>
-      <td>{{ row.low_price }}</td>
-      <td>{{ row.high_price }}</td>
+      <td>{% if row.low_price%}{{ row.low_price }}{% else %}N/A{% endif %}</td>
+      <td>{% if row.high_price%}{{ row.high_price }}{% else %}N/A{% endif %}</td>
     </tr>
   {% endfor %}
 </table>
