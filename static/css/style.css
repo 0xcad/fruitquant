@@ -12,6 +12,7 @@
   --nav-height: 32px;
   --main-width: 58rem;
   --sidepanel-width: 22rem;
+  --sidepanel-text-width: 15rem;
 }
 
 body, html {
@@ -72,6 +73,9 @@ aside {
   font-family: mono, monospace;
   border-bottom: 2px dashed;
   border-top: 2px dashed;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--sidepanel-text-width), 1fr));
+  column-gap: 1rem;
 }
 .fruit-list li {
   white-space: nowrap;
@@ -344,11 +348,6 @@ td, th {
   }
   .sidepanel h1:first-of-type, .sidepanel h2:first-of-type {
     margin-top: revert;
-  }
-  .fruit-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    column-gap: 1rem;
   }
 }
 
