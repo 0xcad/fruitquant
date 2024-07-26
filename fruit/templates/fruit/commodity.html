@@ -5,7 +5,11 @@
 {% if fruit %}
 <h1 class="fruit_{{ entry.dir }}">{{ fruit }}</h1>
 <h3 class='market-offerings-header{% if entry.has_offerings %} is-down{% endif %}'>{{ entry.market_tone }}</h3>
-<div class="chart-wrapper"><div class="chart"></div></div>
+
+<div class="chart-wrapper">
+  <h2 class="chart-heading">chart //</h2>
+  <div class="chart"></div>
+</div>
 
 <h2>{{ date|date:"D. F j, Y"}}</h2>
 <div class="overflow-x-auto">
