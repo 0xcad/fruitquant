@@ -14,7 +14,7 @@ import re
 from itertools import groupby
 from operator import itemgetter
 
-API_KEY = "0vgoHqEhtTZk/b0cE+I1JV+Xrw6x7lXm"
+API_KEY = "0vgoHqEhtTZk/b0cE+I1JWgeP4aAEmpfCDsJEhz61Ic="
 API_ROOT = "https://marsapi.ams.usda.gov/services/v1.2/reports/2314"
 MAX_RANGE = 365 # one year of days
 
@@ -57,9 +57,9 @@ def get_report(end_date=None, commodity=None, duration=None):
             return json.load(f)
 
     # cache miss, get response
-    response = requests.post(url, auth=(API_KEY, API_KEY))
+    response = requests.get(url, auth=(API_KEY, ""))
     if not response.ok:
-        return {"error": "error"}
+        return [{"error": "error"}]
     data = response.json()
     # and save to cache
     if not os.path.isdir("cache"):
@@ -244,7 +244,6 @@ def get_chart_data(table_grouped):
             i += 1
             prev_entry = entry
         date = date + timedelta(days=1)
-        print(i, date, table.get(date_str), len(table))
         loop_count += 1
     return json.dumps(data)
 
