@@ -1,0 +1,13 @@
+services:
+  fruit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fruit
+    command: sh -c "python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
+    restart: always
+    volumes:
+      - .:/app
+networks:
+  default:
+      name: 0xcad-dockernet
